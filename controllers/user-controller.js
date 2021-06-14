@@ -104,7 +104,10 @@ const userController = {
                 console.log(userData)
                 res.json(userData)
             })
-            .catch(err => res.json(err))
+            .catch(err => {
+                console.log(err)
+                res.json(err)
+            })
     }
 };
 

@@ -17,6 +17,12 @@ router
 router
 //api/users/userId/friends/:friendId
 .route('/:userId/friends/:friendId')
-.put(addFriend)
+.post(addFriend)
 .delete(removeFriend)
+
+// router
+// //api/users/userId/friendId
+// .route('/:userId/:friendId')
+// .delete(removeFriend)
+
 module.exports = router;
