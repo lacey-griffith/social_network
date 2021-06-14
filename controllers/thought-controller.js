@@ -96,9 +96,6 @@ const thoughtController = {
             );
         })
         .then(userData => {
-            if (!userData) {
-                return res.status(404).json({ message: 'No user found!' });
-            }
             res.json(userData);
         })
         .catch(err => res.json(err))
