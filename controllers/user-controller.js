@@ -14,10 +14,7 @@ const userController = {
         .select('-__v')
         .sort({_id: -1})
         .then(userData => res.json(userData))
-        .catch(err => {
-            console.log(err)
-            res.status(400).json(err)
-        })
+        .catch(err => res.status(400).json(err))
     },
     getUserById({ params }, res){
         User.findOne({ _id: params.id})
@@ -37,10 +34,7 @@ const userController = {
             }
             res.json(userData)
         })
-        .catch(err => {
-            console.log(err)
-            res.status(400).json(err)
-        })
+        .catch(err => res.status(400).json(err))
     },
     createUser({ body }, res){
         User.create(body)
@@ -56,10 +50,7 @@ const userController = {
             }
             res.json(userData)
         })
-        .catch(err => {
-            console.log(err)
-            res.status(400).json(err)
-        })
+        .catch(err => res.status(400).json(err))
     },
     deleteUser({params}, res){
         User.findOneAndDelete({ _id: params.id})
@@ -68,20 +59,14 @@ const userController = {
                 res.status(404).json({message: 'No user found with this id.'})
                 return
             }
-            console.log('===from user controller ===')
-            console.log(userData)
-            console.log('=== ===')
             res.json(userData)
         })
-        .catch(err => {
-            console.log(err)
-            res.status(400).json(err)
-        })
+        .catch(err => res.json(err))
     },
     addFriend({ params }, res){
         User.findOneAndUpdate(
             { _id: params.userId},
-            { $push: { friends: params.friendId } },
+            { $addToSet: { friends: params.friendId } },
             { new: true, runValidators: true }
             )
             .then(userData => {
@@ -94,20 +79,13 @@ const userController = {
             .catch(err => res.json(err))
     },
     removeFriend({ params }, res){
-        console.log(params)
         User.findOneAndUpdate(
             { _id: params.userId},
             { $pull: { friends: params.friendId } },
             { new: true }
             )
-            .then(userData => {
-                console.log(userData)
-                res.json(userData)
-            })
-            .catch(err => {
-                console.log(err)
-                res.json(err)
-            })
+            .then(userData => res.json(userData))
+            .catch(err => res.json(err))
     }
 };
 
