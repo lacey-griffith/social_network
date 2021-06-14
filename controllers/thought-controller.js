@@ -10,18 +10,12 @@ const thoughtController = {
         .select('-__v')
         .sort({_id: -1})
         .then(thoughtData => {
-            console.log(thoughtData)
-            console.log(thoughtData.length)
             res.json(thoughtData)
         })
-        .catch(err => {
-            console.log(err)
-            res.status(400).json(err)
-        })
+        .catch(err => res.status(400).json(err))
     },
 
     getThoughtbyId({ params }, res) {
-        console.log(params.thoughtId)
         Thought.findById( { _id: params.thoughtId })
             .populate({
                 path: 'reactions',
@@ -29,7 +23,6 @@ const thoughtController = {
             })
             .select('-__v')
             .then(thoughtData => {
-                console.log(thoughtData)
                 if (!thoughtData) {
                     res.status(404).json({ message: 'No thought found with that id!' })
                     return
@@ -40,11 +33,8 @@ const thoughtController = {
     },
 
     createThought({ body }, res) {
-        console.log(body), 'line 35 body of new thought'
         Thought.create(body)
             .then(({  _id }) => {
-                console.log( _id )
-                console.log(body.userId)
             return User.findOneAndUpdate(
                     { _id: body.userId},
                     { $push: { thoughts: _id } }, 
@@ -52,19 +42,13 @@ const thoughtController = {
                 )
             })
             .then(userData => {
-                console.log('+++++ CREATE NEW THOUGHT USER DATA ++++++')
-                console.log(userData)
-                console.log('+++++++++++')
                 if (!userData) {
                     res.status(404).json({ message: 'User not found!' })
                     return
                 }
                 res.json(userData)
             })
-            .catch(err => {
-                console.log(err)
-                res.json(err)
-            })
+            .catch(err => res.json(err))
     },
 
     addReaction({ params, body}, res){
@@ -90,7 +74,6 @@ const thoughtController = {
             { new: true }
             )
             .then(thoughtData => {
-                //console.log(thoughtData)
                 if (!thoughtData) {
                     res.status(404).json({ message: 'No thought found!' })
                     return
@@ -103,9 +86,6 @@ const thoughtController = {
     deleteThought({ params }, res) {
         Thought.findOneAndDelete({ _id: params.thoughtId })
         .then(thoughtData => {
-            console.log('==== first then of delete thought =====')
-            console.log(thoughtData)
-            console.log('=========')
             if (!thoughtData) {
                 return res.status(404).json({ message: 'No thought found!' })
             }
@@ -116,9 +96,6 @@ const thoughtController = {
             );
         })
         .then(userData => {
-            console.log('+++++ after user query for delete thought ++++++')
-            console.log(userData)
-            console.log('+++++++++++')
             if (!userData) {
                 return res.status(404).json({ message: 'No user found!' });
             }
