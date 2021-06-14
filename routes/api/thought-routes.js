@@ -5,22 +5,16 @@ router
 //api/thoughts
 .route('/')
 .get(getAllThoughts)
-
-router
-//api/thoughts/userId
-.route('/:userId')
 .post(createThought)
 
 router
-//api/thoughts/thoughtId
+//api/thoughts/:thoughtId
 .route('/:thoughtId')
 .get(getThoughtbyId)
 .put(updateThought)
-
-router
-//api/thoughts/userId/thoughtId
-.route('/:userId/:thoughtId')
 .delete(deleteThought)
+
+//reaction routes
 
 
 module.exports = router;

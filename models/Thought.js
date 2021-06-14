@@ -26,13 +26,13 @@ const thoughtSchema = new Schema({
     thoughtText: {
         type: String,
         required: 'Text is required!',
-        minLength: [1],
-        maxLength: [280]
+        minLength: 1,
+        maxLength: 280
     },
     createdAt: {
         type: Date,
         default: Date.now,
-        get: dateVal => formatDate(dateVal)
+        // get: dateVal => formatDate(dateVal)
     },
     username: {
         type: String,

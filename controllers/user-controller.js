@@ -3,7 +3,12 @@ const { User } = require('../models');
 const userController = {
     getAllUsers(req, res){
         User.find({})
+        .populate({
+            path: 'thoughts',
+            select: '-__v'
+        })
         .select('-__v')
+        .sort({_id: -1})
         .then(userData => res.json(userData))
         .catch(err => {
             console.log(err)
@@ -12,6 +17,10 @@ const userController = {
     },
     getUserById({ params }, res){
         User.findOne({ _id: params.id})
+        .populate({
+            path: 'thoughts',
+            select: '-__v'
+        })
         .select('-__v')
         .then(userData => {
             if(!userData){
@@ -51,6 +60,9 @@ const userController = {
                 res.status(404).json({message: 'No user found with this id.'})
                 return
             }
+            console.log('===from user controller ===')
+            console.log(userData)
+            console.log('=== ===')
             res.json(userData)
         })
         .catch(err => {

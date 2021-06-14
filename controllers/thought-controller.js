@@ -3,17 +3,25 @@ const { Thought, User } = require('../models');
 const thoughtController = {
     getAllThoughts(req, res) {
         Thought.find({})
-            .select('-__v')
-            .then(thoughtData => {
-                res.json(thoughtData)
-            })
-            .catch(err => res.status(400).json(err))
+        .select('-__v')
+        .sort({_id: -1})
+        .then(thoughtData => {
+            console.log(thoughtData)
+            console.log(thoughtData.length)
+            res.json(thoughtData)
+        })
+        .catch(err => {
+            console.log(err)
+            res.status(400).json(err)
+        })
     },
 
     getThoughtbyId({ params }, res) {
-        Thought.findById({ _id: params.thoughtId })
+        console.log(params.thoughtId)
+        Thought.findById( { _id: params.thoughtId })
             .select('-__v')
             .then(thoughtData => {
+                console.log(thoughtData)
                 if (!thoughtData) {
                     res.status(404).json({ message: 'No thought found with that id!' })
                     return
@@ -24,23 +32,31 @@ const thoughtController = {
     },
 
     createThought({ body }, res) {
-        console.log(body)
+        console.log(body), 'line 35 body of new thought'
         Thought.create(body)
             .then(({  _id }) => {
-                return User.findOneAndUpdate(
-                    { _id: params.userId}, 
+                console.log( _id )
+                console.log(body.userId)
+            return User.findOneAndUpdate(
+                    { _id: body.userId},
                     { $push: { thoughts: _id } }, 
                     { new: true }
-                );
+                )
             })
             .then(userData => {
+                console.log('+++++ CREATE NEW THOUGHT USER DATA ++++++')
+                console.log(userData)
+                console.log('+++++++++++')
                 if (!userData) {
                     res.status(404).json({ message: 'User not found!' })
                     return
                 }
                 res.json(userData)
             })
-            .catch(err => res.json(err))
+            .catch(err => {
+                console.log(err)
+                res.json(err)
+            })
     },
 
     updateThought({ params, body }, res) {
@@ -50,6 +66,7 @@ const thoughtController = {
             { new: true }
             )
             .then(thoughtData => {
+                //console.log(thoughtData)
                 if (!thoughtData) {
                     res.status(404).json({ message: 'No thought found!' })
                     return
@@ -62,21 +79,28 @@ const thoughtController = {
     deleteThought({ params }, res) {
         Thought.findOneAndDelete({ _id: params.thoughtId })
         .then(thoughtData => {
-            if(!thoughtData){
-                res.status(404).json({ message: 'No thought found!' })
-                return
+            console.log('==== first then of delete thought =====')
+            console.log(thoughtData)
+            console.log('=========')
+            if (!thoughtData) {
+                return res.status(404).json({ message: 'No thought found!' })
             }
             return User.findOneAndUpdate(
-                { _id: params.userId },
-                { $pull: {thoughts: params.thoughtId } },
+                { username: thoughtData.username },
+                { $pull: { thoughts: params.thoughtId } },
                 { new: true }
-                )
-        }).then(userData => {
-            if(!userData){
-                res.status(404).json({ message: 'No user found!' })
-                return
+            );
+        })
+        .then(userData => {
+            console.log('+++++ after user query for delete thought ++++++')
+            console.log(userData)
+            console.log('+++++++++++')
+            if (!userData) {
+                return res.status(404).json({ message: 'No user found!' });
             }
-        }).catch(err => res.json(err))
+            res.json(userData);
+        })
+        .catch(err => res.json(err))
     }
 };
 
