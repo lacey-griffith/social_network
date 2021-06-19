@@ -33,5 +33,5 @@ You can also visit my GitHub profile by clicking [here](https://github.com/lacey
 
 ![Site Image](./images/friends.png)
 Above image shows the ability to add friends.
-![Site Image](./images/thoughts:reactions.png)
+![Site Image](./images/thoughts_reactions.png)
 Above image shows the ability to post reactions to thought posts.
